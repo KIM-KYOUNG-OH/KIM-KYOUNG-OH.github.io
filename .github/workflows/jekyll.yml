@@ -33,20 +33,45 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+
+      - name: Install dependencies for Ruby
+        run: |
+          sudo apt update
+          sudo apt install -y build-essential libssl-dev libreadline-dev zlib1g-dev libcurl4-openssl-dev libffi-dev git
+
+      - name: Install rbenv and ruby-build
+        run: |
+          curl -fsSL https://github.com/rbenv/rbenv-installer/raw/main/bin/rbenv-installer | bash
+          export PATH="$HOME/.rbenv/bin:$PATH"
+          eval "$(rbenv init -)"
+          git clone https://github.com/rbenv/ruby-build.git ~/.rbenv/plugins/ruby-build
+          rbenv install 3.1.4
+          rbenv global 3.1.4
+
+      - name: Mark Ruby as installed
+        run: |
+          touch /opt/hostedtoolcache/Ruby/3.1.4/x64.complete  # 설치 완료 표시
+
+      - name: Verify Ruby installation
+        run: ruby -v
+
       - name: Setup Ruby
         uses: ruby/setup-ruby@8575951200e472d5f2d95c625da0c7bec8217c42 # v1.161.0
         with:
           ruby-version: '3.1' # Not needed with a .ruby-version file
           bundler-cache: true # runs 'bundle install' and caches installed gems automatically
           cache-version: 0 # Increment this number if you need to re-download cached gems
+
       - name: Setup Pages
         id: pages
         uses: actions/configure-pages@v5
+
       - name: Build with Jekyll
         # Outputs to the './_site' directory by default
         run: bundle exec jekyll build --baseurl "${{ steps.pages.outputs.base_path }}"
         env:
           JEKYLL_ENV: production
+
       - name: Upload artifact
         # Automatically uploads an artifact from the './_site' directory by default
         uses: actions/upload-pages-artifact@v3
