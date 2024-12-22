@@ -53,3 +53,8 @@ $selection-background-color: unquote("{{ site.selection.background_color }}");
 }
 
 @import "yat";
+
+.post-content {
+  font-size: 1.2em; /* 원하는 크기로 수정 */
+  line-height: 1.8; /* 가독성을 위한 줄 간격 조정 */
+}

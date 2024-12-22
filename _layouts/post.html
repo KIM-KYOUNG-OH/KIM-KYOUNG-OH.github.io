@@ -48,20 +48,21 @@ sidebar:
     <div class="post-related">
       <div>Related Articles</div>
       <ul>
-        {% assign posts = site[page.collection] | sample:4 %}
+        {% assign posts = site[page.collection] %}
+        {% assign count = 0 %}
         {%- for post in posts -%}
-          {%- assign post_item_class = "" -%}
-          {%- if post.top -%}
-            {%- assign post_item_class = "top-post" -%}
+          {%- if post.url != page.url and post.categories == page.categories and count < 4-%}
+            {%- assign post_item_class = post.categories -%}
+            <li class="{{ post_item_class }}">
+              <a class="post-link"
+                href="{{ post.url | relative_url }}"
+                title="{{ post.title | escape }}">
+                {{ post.title | escape | truncatewords: 12 }}
+                {%- include views/post-badges.html -%}
+              </a>
+            </li>
+            {% assign count = count | plus: 1 %}
           {%- endif -%}
-        <li class="{{ post_item_class }}">
-          <a class="post-link"
-            href="{{ post.url | relative_url }}"
-            title="{{ post.title | escape }}">
-            {{ post.title | escape | truncatewords: 12 }}
-            {%- include views/post-badges.html -%}
-          </a>
-        </li>
         {%- endfor -%}
       </ul>
     </div>

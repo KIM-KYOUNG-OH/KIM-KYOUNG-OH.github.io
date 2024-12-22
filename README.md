@@ -156,7 +156,7 @@ remote_theme: "jeffreytse/jekyll-theme-yat"
 And then execute:
 
 ```bash
-$ bundle
+$ bundle exec jekyll serve
 ```
 
 ### Forking/Cloning the project
