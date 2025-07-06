@@ -1,0 +1,1 @@
+Sitemap: https://coffeetimes.github.io/jekyll-theme-yat/sitemap.xml
