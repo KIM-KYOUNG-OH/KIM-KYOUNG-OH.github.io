@@ -107,7 +107,7 @@ html {
 
     .site-favicon {
       display: inline-block;
-      height: math.div($header-height, 1.5);
+      height: divide($header-height, 1.5);
       margin-right: 5px;
     }
   }
@@ -479,7 +479,7 @@ html {
       margin: 60px 0 19px;
     }
 
-    p, hr {
+    p {
       margin-bottom: 24px;
     }
 
@@ -487,6 +487,7 @@ html {
       height: 1px;
       background-color: #ebebeb;
       border: none;
+      margin: 60px 0;
     }
   }
 
@@ -524,12 +525,20 @@ html {
   justify-content: space-between;
   margin: 72px 0 59px;
   padding: 31px 0 0;
+  gap: 36px;
 
   a {
     @include relative-font-size(1.125);
     color: $grey-color;
-    line-height: 15px;
-    max-width: 50%;
+    max-width: 45%;
+    display: flex;
+    align-items: center;
+
+    * {
+        overflow: hidden;
+        text-wrap-mode: nowrap;
+        text-overflow: ellipsis;
+    }
   }
 
   .previous:before {
@@ -695,7 +704,7 @@ html {
   }
 
   @include media-query($on-palm) {
-    height: math.div($banner-height, 1.5);
+    height: divide($banner-height, 1.5);
   }
 }
 
