@@ -13,7 +13,7 @@ banner:
   min_height: "38vh"
   heading_style: "font-size: 4.25em; font-weight: bold; text-decoration: underline"
   subheading_style: "color: gold"
-tags: zero-downtime-deployment Infra CI/CD
+tags: zero-downtime-deployment infra CI/CD
 sidebar: []
 ---
 

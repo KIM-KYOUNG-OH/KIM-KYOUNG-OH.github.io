@@ -12,7 +12,7 @@ banner:
   min_height: "38vh"
   heading_style: "font-size: 4.25em; font-weight: bold; text-decoration: underline"
   subheading_style: "color: gold"
-tags: clean_code test concurrency_control
+tags: clean-code test concurrency-control
 sidebar: []
 ---
 
