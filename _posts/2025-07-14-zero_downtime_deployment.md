@@ -9,7 +9,7 @@ banner:
   image: https://github.com/user-attachments/assets/9f571387-6d43-4cee-8eb1-a612c079a2b4
   opacity: 0.618
   background: "#000"
-  height: "100vh"
+  height: "30vh"
   min_height: "38vh"
   heading_style: "font-size: 4.25em; font-weight: bold; text-decoration: underline"
   subheading_style: "color: gold"
