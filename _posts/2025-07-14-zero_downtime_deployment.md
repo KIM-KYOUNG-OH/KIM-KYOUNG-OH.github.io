@@ -3,7 +3,7 @@ layout: post
 published: true
 title: 배포가 두렵다면? 무중단 배포 전략
 author: 김경오
-categories: 인프라
+categories: Infra
 date: 2025-07-14
 banner:
   image: https://github.com/user-attachments/assets/9f571387-6d43-4cee-8eb1-a612c079a2b4

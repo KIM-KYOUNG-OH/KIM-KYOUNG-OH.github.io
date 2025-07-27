@@ -3,7 +3,7 @@ layout: post
 published: true
 title: if-else는 이제 그만, 전략 패턴으로 코드 개선하기
 author: 김경오
-categories: 소프트웨어 아키텍처
+categories: Design-Pattern
 date: 2025-07-27
 banner:
   image: https://github.com/user-attachments/assets/d56b47b5-7556-4ca3-82ec-e61122362fff
