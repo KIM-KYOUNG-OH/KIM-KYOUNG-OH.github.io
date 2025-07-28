@@ -19,7 +19,9 @@
       <div class="wrapper">
         {{ content }}
 
-        {%- include comments.html -%}
+        {% if page.layout == "post" and page.comments != false %}
+          {%- include comments.html -%}
+        {% endif %}
       </div>
     </main>
 
