@@ -157,5 +157,3 @@ public class DeliveryService {
 
 더 이상 if-else 지옥에 갇히지 마세요.
 전략 패턴으로 깔끔하고 유지보수 쉬운 코드를 만들어 보세요!
-
-
