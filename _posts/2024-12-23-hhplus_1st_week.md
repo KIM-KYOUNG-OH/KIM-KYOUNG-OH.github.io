@@ -9,7 +9,7 @@ banner:
   background: "#000"
   height: "30vh"
   min_height: "38vh"
-  heading_style: "font-size: 4.25em; font-weight: bold; text-decoration: underline"
+  heading_style: "font-weight: bold;"
   subheading_style: "color: gold"
 tags: clean-code test concurrency-control
 sidebar: []
