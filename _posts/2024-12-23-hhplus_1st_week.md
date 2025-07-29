@@ -14,6 +14,7 @@ banner:
   subheading_style: "color: gold"
 tags: clean-code test concurrency-control
 sidebar: []
+comments: true
 ---
 
 항해 Plus 1주차 핵심 주제는 ‘클린 코드 & 테스트’ 에 대한 내용이었습니다.

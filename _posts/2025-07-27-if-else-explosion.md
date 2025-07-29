@@ -15,6 +15,7 @@ banner:
   subheading_style: "color: gold"
 tags: design-pattern spring java strategy-pattern 
 sidebar: []
+comments: true
 ---
 
 개발자라면 한 번쯤은 `if-else` 문으로 가득한 클래스를 만들어본 적이 있을 겁니다.  

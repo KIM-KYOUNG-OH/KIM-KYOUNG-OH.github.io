@@ -15,6 +15,7 @@ banner:
   subheading_style: "color: gold"
 tags: http spring java
 sidebar: []
+comments: true
 ---
 
 Spring 기반 애플리케이션에서 외부 API와의 HTTP 통신은 매우 일반적인 작업입니다. 하지만 사용할 수 있는 도구가 다양하다 보니, **어떤 도구를 언제 써야 할지 헷갈리는 경우가 많습니다.**
