@@ -2,7 +2,6 @@
 layout: post
 published: true
 title: 배포가 두렵다면? 무중단 배포 전략
-author: 김경오
 categories: Infra
 date: 2025-07-14
 banner:

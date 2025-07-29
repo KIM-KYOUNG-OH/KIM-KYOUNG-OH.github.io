@@ -2,7 +2,6 @@
 layout: post
 published: true
 title: Spring 개발자가 알아야 할 HTTP 통신 도구
-author: 김경오
 categories: Spring
 date: 2025-07-21
 banner:

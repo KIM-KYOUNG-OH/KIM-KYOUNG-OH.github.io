@@ -1,7 +1,6 @@
 ---
 layout: post
 title: 항해 Plus 1주차 회고(WIL)
-author: 김경오
 categories: 회고
 date: 2024-12-22
 banner:
