@@ -1,0 +1,1092 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <meta name="google-site-verification" content="0G5yH77EBz9z9SloHZvX_nYnPHZpyWg_cCi3zDrdFSg">
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="google-translate-customization" content="108d9124921d80c3-80e20d618ff053c8-g4f02ec6f3dba68b7-c">
+<!-- Begin Jekyll SEO tag v2.8.0 -->
+<title>Spring 개발자가 알아야 할 HTTP 통신 도구 | TechBlog</title>
+<meta name="generator" content="Jekyll v4.4.1">
+<meta property="og:title" content="Spring 개발자가 알아야 할 HTTP 통신 도구">
+<meta name="author" content="KIM-KYOUNG-OH">
+<meta property="og:locale" content="en_US">
+<meta name="description" content="Spring 기반 애플리케이션에서 외부 API와의 HTTP 통신은 매우 일반적인 작업입니다. 하지만 사용할 수 있는 도구가 다양하다 보니, 어떤 도구를 언제 써야 할지 헷갈리는 경우가 많습니다.">
+<meta property="og:description" content="Spring 기반 애플리케이션에서 외부 API와의 HTTP 통신은 매우 일반적인 작업입니다. 하지만 사용할 수 있는 도구가 다양하다 보니, 어떤 도구를 언제 써야 할지 헷갈리는 경우가 많습니다.">
+<link rel="canonical" href="https://coffeetimes.github.io/jekyll-theme-yat/spring/2025/07/21/http_communication_tool.html">
+<meta property="og:url" content="https://coffeetimes.github.io/jekyll-theme-yat/spring/2025/07/21/http_communication_tool.html">
+<meta property="og:site_name" content="TechBlog">
+<meta property="og:type" content="article">
+<meta property="article:published_time" content="2025-07-21T00:00:00+00:00">
+<meta name="twitter:card" content="summary">
+<meta property="twitter:title" content="Spring 개발자가 알아야 할 HTTP 통신 도구">
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"KIM-KYOUNG-OH"},"dateModified":"2025-07-21T00:00:00+00:00","datePublished":"2025-07-21T00:00:00+00:00","description":"Spring 기반 애플리케이션에서 외부 API와의 HTTP 통신은 매우 일반적인 작업입니다. 하지만 사용할 수 있는 도구가 다양하다 보니, 어떤 도구를 언제 써야 할지 헷갈리는 경우가 많습니다.","headline":"Spring 개발자가 알아야 할 HTTP 통신 도구","mainEntityOfPage":{"@type":"WebPage","@id":"https://coffeetimes.github.io/jekyll-theme-yat/spring/2025/07/21/http_communication_tool.html"},"url":"https://coffeetimes.github.io/jekyll-theme-yat/spring/2025/07/21/http_communication_tool.html"}</script>
+<!-- End Jekyll SEO tag -->
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR&amp;display=swap" rel="stylesheet">
+  <link rel="icon" href="">
+  <link rel="canonical" href="https://coffeetimes.github.io">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/typeface-noto-sans@0.0.72/index.min.css">
+  <link rel="stylesheet" href="/jekyll-theme-yat/assets/css/main.css">
+  <script src="/jekyll-theme-yat/assets/js/main.js"></script><link type="application/atom+xml" rel="alternate" href="https://coffeetimes.github.io/jekyll-theme-yat/feed.xml" title="TechBlog">
+<link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/10.1.1/styles/default.min.css">
+<script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/10.1.1/highlight.min.js"></script>
+<!-- and it's easy to individually load additional languages -->
+<script charset="UTF-8" src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.1.1/languages/go.min.js" async></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<script>
+// Init highlight js
+document.addEventListener('DOMContentLoaded', function(event) {
+  var els = document.querySelectorAll('pre code')
+
+  function addLangData(block) {
+    var outer = block.parentElement.parentElement.parentElement;
+    var lang = block.getAttribute('data-lang');
+    for (var i = 0; i < outer.classList.length; i++) {
+      var cls = outer.classList[i];
+      if (cls.startsWith('language-')) {
+        lang = cls;
+        break;
+      }
+    }
+    if (!lang) {
+      cls = block.getAttribute('class');
+      lang = cls ? cls.replace('hljs ', '') : '';
+    }
+    if (lang.startsWith('language-')) {
+      lang = lang.substr(9);
+    }
+    block.setAttribute('class', 'hljs ' + lang);
+    block.parentNode.setAttribute('data-lang', lang);
+  }
+
+  function addBadge(block) {
+    var enabled = ('true' || 'true').toLowerCase();
+    if (enabled == 'true') {
+      var pre = block.parentElement;
+      pre.classList.add('badge');
+    }
+  }
+
+  function handle(block) {
+    addLangData(block);
+    addBadge(block)
+    hljs.highlightBlock(block);
+  }
+
+  for (var i = 0; i < els.length; i++) {
+    var el = els[i];
+    handle(el);
+  }
+});
+</script>
+
+<style>
+  /* code language badge */
+  pre.badge::before {
+    content: attr(data-lang);
+    color: #fff;
+    background-color: #ff4e00;
+    padding: 0 .5em;
+    border-radius: 0 2px;
+    text-transform: uppercase;
+    text-align: center;
+    min-width: 32px;
+    display: inline-block;
+    position: absolute;
+    right: 0;
+  }
+
+  /* fix wrong badge display for firefox browser */
+  code > table pre::before {
+    display: none;
+  }
+</style>
+<script src="//cdnjs.cloudflare.com/ajax/libs/photoswipe/5.3.7/umd/photoswipe-lightbox.umd.min.js" async></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/photoswipe/5.3.7/umd/photoswipe.umd.min.js" async></script>
+<link href="//cdnjs.cloudflare.com/ajax/libs/photoswipe/5.3.7/photoswipe.min.css" rel="stylesheet">
+<style>
+  .pswp .pswp__container .pswp__img {
+    background-color: white;
+  }
+</style>
+
+<script>
+  function initPhotoSwipe() {
+    let customOptions = {};
+
+    try {
+      const data = ``.replaceAll("=>", ":");
+      customOptions = JSON.parse(data);
+    } catch (e) {
+      console.info("Invalid custom photo previewer options! " + e.message);
+    }
+
+    // Define object and gallery options
+    const options = Object.assign(
+      {
+        gallery: "section.main",
+        children: "a.photo-swipe",
+        photo_scale: 2,
+        // dynamic import is not supported in UMD version
+        pswpModule: PhotoSwipe,
+      },
+      customOptions
+    );
+
+    const galleryEl = document.querySelector(options.gallery);
+    if (!galleryEl) {
+      return;
+    }
+
+    const imgEls = [];
+    const els = galleryEl.querySelectorAll("img:not(.emoji)");
+    els.forEach((el) => {
+      if (el.src.trim() == "") {
+        return;
+      }
+      if (!imgEls.includes(el)) {
+        imgEls.push(el);
+      }
+    });
+
+    if (imgEls.length === 0) {
+      return;
+    }
+
+    imgEls.forEach((imgEl) => {
+      imgEl.outerHTML = `
+      <a class="photo-swipe"
+        href="${imgEl.src}"
+        data-pswp-width="${
+          Math.max(imgEl.naturalWidth, imgEl.width) * options.photo_scale
+        }"
+        data-pswp-height="${
+          Math.max(imgEl.naturalHeight, imgEl.height) * options.photo_scale
+        }"
+        data-pswp-caption="${imgEl.getAttribute("caption") || imgEl.alt}"
+        target="_blank">
+        ${imgEl.outerHTML}
+      </a>`;
+    });
+
+    // Initialize PhotoSwipe 5
+    var lightbox = new PhotoSwipeLightbox(options);
+
+    lightbox.init();
+  }
+
+  window.addEventListener("load", initPhotoSwipe);
+</script>
+<!-- Global site tag (gtag.js) - Google Analytics -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-PKKBBE0XKX"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-PKKBBE0XKX');
+  </script>
+</head>
+<body>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<header class="site-header site-header-transparent" role="banner">
+
+  <div class="wrapper">
+    <div class="site-header-inner">
+<span class="site-brand"><a class="site-brand-inner" rel="author" href="/jekyll-theme-yat/">
+  <img class="site-favicon" title="TechBlog" src="" onerror="this.style.display='none'">
+  TechBlog
+</a>
+</span><nav class="site-nav">
+          <input type="checkbox" id="nav-trigger" class="nav-trigger">
+          <label for="nav-trigger">
+            <span class="menu-icon">
+              <svg viewbox="0 0 18 15" width="18px" height="15px">
+                <path d="M18,1.484c0,0.82-0.665,1.484-1.484,1.484H1.484C0.665,2.969,0,2.304,0,1.484l0,0C0,0.665,0.665,0,1.484,0 h15.032C17.335,0,18,0.665,18,1.484L18,1.484z M18,7.516C18,8.335,17.335,9,16.516,9H1.484C0.665,9,0,8.335,0,7.516l0,0 c0-0.82,0.665-1.484,1.484-1.484h15.032C17.335,6.031,18,6.696,18,7.516L18,7.516z M18,13.516C18,14.335,17.335,15,16.516,15H1.484 C0.665,15,0,14.335,0,13.516l0,0c0-0.82,0.665-1.483,1.484-1.483h15.032C17.335,12.031,18,12.695,18,13.516L18,13.516z"></path>
+              </svg>
+            </span>
+          </label>
+
+          <div class="trigger">
+<a class="page-link" href="/jekyll-theme-yat/about.html">ABOUT</a><a class="page-link" href="/jekyll-theme-yat/archives.html">ARCHIVES</a><a class="page-link" href="/jekyll-theme-yat/categories.html">CATEGORIES</a><a class="page-link" href="/jekyll-theme-yat/">HOME</a><a class="page-link" href="/jekyll-theme-yat/tags.html">TAGS</a>
+
+
+
+
+</div>
+        </nav>
+</div>
+  </div>
+</header>
+
+<script>
+  function initHeader() {
+    var lastScrollY = getScrollPos().y;
+    var documentElement = document.documentElement;
+
+    function storeScrollData() {
+      var y = getScrollPos().y;documentElement.setAttribute("data-header-transparent", "");var scrollStatus = "";
+
+      if (y <= 0) {
+        scrollStatus = "top";
+      } else if ((window.innerHeight + y) >= document.body.offsetHeight) {
+        scrollStatus = "bottom";
+      } else {
+        var isScrollDown = (y - lastScrollY > 0) ? true : false;
+        scrollStatus = isScrollDown ? "down" : "up";
+      }
+
+      lastScrollY = y;
+      documentElement.setAttribute("data-scroll-status", scrollStatus);
+    }
+
+    window.addEventListener('scroll', function(e) {
+      storeScrollData();
+    });
+
+    storeScrollData();
+  }
+  document.addEventListener('DOMContentLoaded', initHeader);
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<style>
+    html .page-banner {
+      background: #000;
+    }
+  </style>
+<style>html .page-banner {
+      height:  11.04vh;
+      min-height: 38vh;
+    }
+    html[data-scroll-status="top"] .page-banner {
+      height: 30vh;
+    }
+  </style>
+<style>
+    html .page-banner .page-banner-img > *:first-child {
+      opacity: 0.618;
+    }
+
+    html[data-theme="dark"] .page-banner .page-banner-img > *:first-child {
+      opacity: 0.443724;
+    }
+  </style>
+<style>
+    html .page-banner .page-banner-inner > *:first-child > *:nth-child(1) {
+      font-weight: bold;
+    }
+  </style>
+<style>
+    html .page-banner .page-banner-inner > *:first-child > *:nth-child(2) {
+      color: gold
+    }
+  </style>
+<section class="page-banner">
+    <div class="page-banner-img">
+<div style="background-image: url(https://github.com/user-attachments/assets/d5fd60a1-84b1-4374-ac00-dae28d45ac3e)"></div>
+        <img class="img-placeholder" src="https://github.com/user-attachments/assets/d5fd60a1-84b1-4374-ac00-dae28d45ac3e">
+</div>
+    <div class="wrapper">
+      <div class="page-banner-inner">
+<header class="post-header">
+  <h1 class="post-title p-name" itemprop="name headline">Spring 개발자가 알아야 할 HTTP 통신 도구</h1>
+  <h2 class="post-subtitle"></h2>
+
+  <div class="post-meta">
+    <time class="dt-published" datetime="2025-07-21T00:00:00+00:00" itemprop="datePublished"><i class="fa fa-calendar"></i> Jul 21, 2025
+    </time>
+    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <span class="post-reading-time left-vsplit"><i class="fa fa-clock-o"></i> About 4 mins</span>
+  </div>
+<div class="post-tags">
+<a class="post-tag" href="/jekyll-theme-yat/tags.html#http">#http</a><a class="post-tag" href="/jekyll-theme-yat/tags.html#spring">#spring</a><a class="post-tag" href="/jekyll-theme-yat/tags.html#java">#java</a>
+</div></header>
+</div>
+    </div>
+  </section><script>
+  function hashLocate(hashValue) {
+    hashValue = hashValue.replace(/^.*#h-/, '');
+    hashValue = decodeURIComponent(hashValue);
+    var element = document.getElementById(hashValue);
+
+    if (!element) {
+      return;
+    }
+
+    var header = document.querySelector('header.site-header');
+    var headerRect = header.getBoundingClientRect();
+    var headerTop = Math.floor(headerRect.top);
+    var headerHeight = Math.floor(headerRect.height);
+    var scrollPos = getScrollPos();
+    var offsetY = element.offsetTop - (headerTop + headerHeight + 20);
+
+    if (offsetY == scrollPos.y) {
+      return;
+    }
+
+    if (headerTop == 0  && offsetY > scrollPos.y) {
+      offsetY += headerHeight + 2;
+    } else if (headerTop < 0  && offsetY < scrollPos.y) {
+      offsetY -= headerHeight - 2;
+    }
+
+    smoothScrollTo(offsetY);
+  }
+
+  // The first event occurred
+  window.addEventListener('load', function(event) {
+    if (window.location.hash) {
+      hashLocate(window.location.hash);
+    }
+  });
+
+  // The first event occurred
+  window.addEventListener('click', function(event) {
+    if (event.target.tagName.toLowerCase() == 'a') {
+      hashLocate(event.target.getAttribute('href'));
+    }
+  });
+</script>
+<div class="theme-toggle">
+  <input type="checkbox" id="theme-switch">
+  <label for="theme-switch">
+    <div class="toggle"></div>
+    <div class="names">
+      <p class="light">Light</p>
+      <p class="dark">Dark</p>
+    </div>
+  </label>
+</div>
+
+
+
+
+<script>
+  (function() {
+    var sw = document.getElementById('theme-switch');
+    var html = document.getElementsByTagName('html')[0];
+    var nightModeOption = ('off' || 'auto').toLowerCase();
+    var storage = nightModeOption === 'manual'
+        ? localStorage
+        : sessionStorage;
+    var themeData = loadThemeData();
+
+    function saveThemeData(data) {
+      storage.setItem('theme', JSON.stringify(data));
+    }
+
+    function loadThemeData() {
+      var data = storage.getItem('theme');
+      try {
+        data = JSON.parse(data ? data : '');
+      } catch(e) {
+        data = { nightShift: undefined, autoToggleAt: 0 };
+        saveThemeData(data);
+      }
+      return data;
+    }
+
+    function handleThemeToggle(nightShift) {
+      themeData.nightShift = nightShift;
+      saveThemeData(themeData);
+      html.dataset.theme = nightShift ? 'dark' : 'light';
+      setTimeout(function() {
+        sw.checked = nightShift ? true : false;
+        document.dispatchEvent(new Event('theme-changed'));
+      }, 50);
+    }
+
+    function autoThemeToggle() {
+      // Next time point of theme toggle
+      var now = new Date();
+      var toggleAt = new Date();
+      var hours = now.getHours();
+      var nightShift = hours >= 19 || hours <=7;
+
+      if (nightShift) {
+        if (hours > 7) {
+          toggleAt.setDate(toggleAt.getDate() + 1);
+        }
+        toggleAt.setHours(7);
+      } else {
+        toggleAt.setHours(19);
+      }
+
+      toggleAt.setMinutes(0);
+      toggleAt.setSeconds(0);
+      toggleAt.setMilliseconds(0)
+
+      var delay = toggleAt.getTime() - now.getTime();
+
+      // auto toggle theme mode
+      setTimeout(function() {
+        handleThemeToggle(!nightShift);
+      }, delay);
+
+      return {
+        nightShift: nightShift,
+        toggleAt: toggleAt.getTime()
+      };
+    }
+
+    // Listen the theme toggle event
+    sw.addEventListener('change', function(event) {
+      handleThemeToggle(event.target.checked);
+    });
+
+    if (nightModeOption == 'auto') {
+      var data = autoThemeToggle();
+
+      // Toggle theme by local setting
+      if (data.toggleAt > themeData.autoToggleAt) {
+        themeData.autoToggleAt = data.toggleAt;
+        handleThemeToggle(data.nightShift);
+      } else {
+        handleThemeToggle(themeData.nightShift);
+      }
+    } else if (nightModeOption == 'manual') {
+      handleThemeToggle(themeData.nightShift);
+    } else {
+      var nightShift = themeData.nightShift;
+      if (nightShift === undefined) {
+        nightShift = nightModeOption === 'on';
+      }
+      handleThemeToggle(nightShift);
+    }
+  })();
+</script>
+<div id="click-to-top" class="click-to-top">
+  <i class="fa fa-arrow-up"></i>
+</div>
+<script>
+  (function () {
+    const clickToTop = document.getElementById('click-to-top');
+    window.addEventListener('scroll', () => {
+      if (window.scrollY > 100) {
+        clickToTop.classList.add('show')
+      }else {
+        clickToTop.classList.remove('show')
+      }
+    });
+    clickToTop.addEventListener('click', () => {
+      window.smoothScrollTo(0);
+    });
+  })();
+</script>
+<main class="page-content" aria-label="Content">
+      <div class="wrapper">
+        <div class="framework">
+  <section class="main">
+
+     <div class="post">
+  <section>
+
+
+
+
+
+
+
+
+
+<article class="post h-entry" itemscope itemtype="http://schema.org/BlogPosting">
+
+    <div class="post-content e-content" itemprop="articleBody">
+
+      <p>Spring 기반 애플리케이션에서 외부 API와의 HTTP 통신은 매우 일반적인 작업입니다. 하지만 사용할 수 있는 도구가 다양하다 보니, <strong>어떤 도구를 언제 써야 할지 헷갈리는 경우가 많습니다.</strong></p>
+
+<p>이번 글에서는 <strong>Spring 개발자가 알아야 할 주요 HTTP 통신 도구 5가지</strong>를 간단한 설명과 함께 정리해보았습니다.</p>
+
+<h2 id="1resttemplate">1.RestTemplate</h2>
+
+<p>오랫동안 사용된 고전적 동기 방식 Spring 표준 Http Client</p>
+
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nc">RestTemplate</span> <span class="n">restTemplate</span> <span class="o">=</span> <span class="k">new</span> <span class="nc">RestTemplate</span><span class="o">();</span>
+<span class="nc">Order</span> <span class="n">order</span> <span class="o">=</span> <span class="n">restTemplate</span><span class="o">.</span><span class="na">getForObject</span><span class="o">(</span><span class="s">"https://api.example.com/orders/{id}"</span><span class="o">,</span> <span class="nc">Order</span><span class="o">.</span><span class="na">class</span><span class="o">,</span> <span class="n">id</span><span class="o">);</span>
+</code></pre></div></div>
+
+<h4 id="장점">장점</h4>
+
+<ul>
+  <li>사용법이 간단하고 직관적</li>
+  <li>오랜 기간 사용되어 안정적이며 간단한 REST 호출에 적합</li>
+</ul>
+
+<h4 id="단점">단점</h4>
+
+<ul>
+  <li>동기 방식만 지원 → 대규모 동시성 환경에서 성능 저하 발생</li>
+  <li>Spring 5부터는 업데이트 중단(Deprecated)</li>
+</ul>
+
+<h2 id="webclient">WebClient</h2>
+
+<p>Spring WebFlux의 비동기 &amp; 리액티브 HTTP 클라이언트</p>
+
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nc">WebClient</span> <span class="n">client</span> <span class="o">=</span> <span class="nc">WebClient</span><span class="o">.</span><span class="na">create</span><span class="o">(</span><span class="s">"https://api.example.com"</span><span class="o">);</span>
+
+<span class="nc">Mono</span><span class="o">&lt;</span><span class="nc">Order</span><span class="o">&gt;</span> <span class="n">orderMono</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="na">get</span><span class="o">()</span>
+    <span class="o">.</span><span class="na">uri</span><span class="o">(</span><span class="s">"/orders/{id}"</span><span class="o">,</span> <span class="n">id</span><span class="o">)</span>
+    <span class="o">.</span><span class="na">retrieve</span><span class="o">()</span>
+    <span class="o">.</span><span class="na">bodyToMono</span><span class="o">(</span><span class="nc">Order</span><span class="o">.</span><span class="na">class</span><span class="o">);</span>
+</code></pre></div></div>
+
+<h4 id="장점-1">장점</h4>
+
+<ul>
+  <li>Non-Blocking/Reactive 패러다임 지원 → 높은 동시 처리 성능</li>
+  <li>체이닝(Fluent) 방식의 체계적이고 직관적</li>
+  <li>동기/비동기 모두 지원</li>
+  <li>REST뿐만 아니라 웹소켓, SSE등 다양한 프로토콜 지원</li>
+</ul>
+
+<h4 id="단점-1">단점</h4>
+
+<ul>
+  <li>Reactive 프로그래밍 개념에 대한 러닝커브가 있음</li>
+  <li>동기 방식보다 복잡한 예외 처리 필요</li>
+</ul>
+
+<h2 id="3restclient">3.RestClient</h2>
+
+<p>Spring 6에서 새롭게 등장한 선언형 HTTP 클라이언트</p>
+
+<p><code class="language-plaintext highlighter-rouge">RestTemplate</code> + <code class="language-plaintext highlighter-rouge">WebClient</code> 장점을 흡수한 현대적 API</p>
+
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nc">RestClient</span> <span class="n">restClient</span> <span class="o">=</span> <span class="nc">RestClient</span><span class="o">.</span><span class="na">create</span><span class="o">(</span><span class="s">"https://api.example.com"</span><span class="o">);</span>
+
+<span class="nc">Order</span> <span class="n">order</span> <span class="o">=</span> <span class="n">restClient</span><span class="o">.</span><span class="na">get</span><span class="o">()</span>
+        <span class="o">.</span><span class="na">uri</span><span class="o">(</span><span class="s">"/orders/{id}"</span><span class="o">,</span> <span class="n">id</span><span class="o">)</span>
+        <span class="o">.</span><span class="na">retrieve</span><span class="o">()</span>
+        <span class="o">.</span><span class="na">body</span><span class="o">(</span><span class="nc">Order</span><span class="o">.</span><span class="na">class</span><span class="o">);</span>
+</code></pre></div></div>
+
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nd">@RestClient</span>
+<span class="kd">public</span> <span class="kd">interface</span> <span class="nc">OrderClient</span> <span class="o">{</span>
+    <span class="nd">@GetExchange</span><span class="o">(</span><span class="s">"/orders/{id}"</span><span class="o">)</span>
+    <span class="nc">Order</span> <span class="nf">getOrder</span><span class="o">(</span><span class="nd">@PathVariable</span><span class="o">(</span><span class="s">"id"</span><span class="o">)</span> <span class="nc">Long</span> <span class="n">id</span><span class="o">);</span>
+<span class="o">}</span>
+
+<span class="c1">// 사용 예시</span>
+<span class="nc">Order</span> <span class="n">order</span> <span class="o">=</span> <span class="n">orderClient</span><span class="o">.</span><span class="na">getOrder</span><span class="o">(</span><span class="mi">123L</span><span class="o">);</span>
+</code></pre></div></div>
+
+<h4 id="장점-2">장점</h4>
+
+<ul>
+  <li>RestTemplate 보다 심플하고 현대적인 동기식 API 제공</li>
+  <li>
+<strong>체이닝 기반 명령형 호출과 인터페이스 선언형 호출</strong> 모두 지원 가능</li>
+  <li>Spring 6 내장 라이브러리 (추가 의존성 없음)</li>
+</ul>
+
+<h4 id="단점-2">단점</h4>
+
+<ul>
+  <li>Spring 6 이상에서만 사용 가능(구버전 호환 불가)</li>
+  <li>생태계/레퍼런스/사례가 아직 제한적임</li>
+</ul>
+
+<h2 id="4httpclient">4.HttpClient</h2>
+
+<p>JDK 내장 라이브러리</p>
+
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nc">HttpClient</span> <span class="n">client</span> <span class="o">=</span> <span class="nc">HttpClient</span><span class="o">.</span><span class="na">newHttpClient</span><span class="o">();</span>
+<span class="nc">HttpRequest</span> <span class="n">request</span> <span class="o">=</span> <span class="nc">HttpRequest</span><span class="o">.</span><span class="na">newBuilder</span><span class="o">()</span>
+        <span class="o">.</span><span class="na">uri</span><span class="o">(</span><span class="no">URI</span><span class="o">.</span><span class="na">create</span><span class="o">(</span><span class="s">"https://api.example.com/orders/1"</span><span class="o">))</span>
+        <span class="o">.</span><span class="na">build</span><span class="o">();</span>
+
+<span class="nc">HttpResponse</span><span class="o">&lt;</span><span class="nc">String</span><span class="o">&gt;</span> <span class="n">response</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="na">send</span><span class="o">(</span><span class="n">request</span><span class="o">,</span> <span class="nc">BodyHandlers</span><span class="o">.</span><span class="na">ofString</span><span class="o">());</span>
+</code></pre></div></div>
+
+<h4 id="장점-3">장점</h4>
+
+<ul>
+  <li>JDK +11 내장 라이브러리이므로 외부 의존성 없이 바로 사용 가능</li>
+  <li>동기/비동기 모두 지원</li>
+  <li>HTTP/2, WebSocket 등 최신 프로토콜 지원</li>
+  <li>저수준 레벨의 세부 제어 가능</li>
+</ul>
+
+<h4 id="단점-3">단점</h4>
+
+<ul>
+  <li>직접 모든 것을 처리해야함(직렬화, 예외 처리 등)</li>
+  <li>생산성이 RestTemplate, WebClient 보다 낮을 수 있음</li>
+  <li>JDK 11 이상 필요(구버전 호환 불가)</li>
+</ul>
+
+<h2 id="5feignclient-spring-cloud-openfeign">5.FeignClient (Spring Cloud OpenFeign)</h2>
+
+<p>인터페이스 기반 선언형 HTTP 클라이언트<br>
+<strong>OpenFeign</strong> 이라는 이름으로 <strong>Spring Cloud</strong> 의 일부로 통합되어 있음<br>
+인터페이스에 애노테이션만 붙이면 API 호출 가능</p>
+
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nd">@FeignClient</span><span class="o">(</span><span class="n">name</span> <span class="o">=</span> <span class="s">"orderClient"</span><span class="o">,</span> <span class="n">url</span> <span class="o">=</span> <span class="s">"https://api.example.com"</span><span class="o">)</span>
+<span class="kd">public</span> <span class="kd">interface</span> <span class="nc">OrderClient</span> <span class="o">{</span>
+    <span class="nd">@GetMapping</span><span class="o">(</span><span class="s">"/orders/{id}"</span><span class="o">)</span>
+    <span class="nc">Order</span> <span class="nf">getOrder</span><span class="o">(</span><span class="nd">@PathVariable</span> <span class="nc">String</span> <span class="n">id</span><span class="o">);</span>
+<span class="o">}</span>
+</code></pre></div></div>
+
+<h4 id="장점-4">장점</h4>
+
+<ul>
+  <li>선언형(Declarative) 스타일로 코드가 간결하고 직관적임</li>
+  <li>Spring Cloud Discovery, Load Balancer 등과의 연동이 우수함</li>
+  <li>인터페이스만 정의하면 런타임에 구현체가 자동 생성되어 생산성이 높음</li>
+</ul>
+
+<h4 id="단점-4">단점</h4>
+
+<ul>
+  <li>동기 방식만 기본 지원(비동기 미지원)</li>
+  <li>커스터마이징에 한계가 있음</li>
+</ul>
+
+<h2 id="비교-요약">비교 요약</h2>
+
+<table>
+  <thead>
+    <tr>
+      <th>라이브러리</th>
+      <th>지원 방식</th>
+      <th>동기/비동기</th>
+      <th>장점</th>
+      <th>단점</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><strong>RestTemplate</strong></td>
+      <td>Spring 내장</td>
+      <td>동기</td>
+      <td>사용 쉬움, 문서 풍부</td>
+      <td>동기만 지원, 신규 개발 비권장</td>
+    </tr>
+    <tr>
+      <td><strong>WebClient</strong></td>
+      <td>Spring Webflux 내장</td>
+      <td>동기/비동기(주로 비동기)</td>
+      <td>고성능, Reactive, 현대적</td>
+      <td>러닝커브, 일부 복잡</td>
+    </tr>
+    <tr>
+      <td><strong>RestClient</strong></td>
+      <td>Spring 6+ 내장</td>
+      <td>동기</td>
+      <td>간결한 문법, 최신 표준</td>
+      <td>Spring 6+ 한정, 자료 적음</td>
+    </tr>
+    <tr>
+      <td><strong>HttpClient</strong></td>
+      <td>JDK 11+ 내장</td>
+      <td>동기/비동기</td>
+      <td>외부 의존성 없음, 저수준 제어 용이</td>
+      <td>Spring 통합 불편, 코드 많아짐</td>
+    </tr>
+    <tr>
+      <td><strong>Feign Client</strong></td>
+      <td>Spring Cloud 외부</td>
+      <td>동기</td>
+      <td>선언형, 마이크로서비스 최적</td>
+      <td>동기 한정, 커스터마이즈 한계</td>
+    </tr>
+  </tbody>
+</table>
+
+<h2 id="마무리">마무리</h2>
+
+<p>Spring 기반 애플리케이션에서 HTTP 통신을 구현하는 방법은 다양합니다.</p>
+
+<p>각 라이브러리마다 특성이 다르므로, 프로젝트 환경과 목적에 맞는 도구를 선택하는 것이 중요합니다.</p>
+
+<p>기술 선택은 <strong>프로젝트의 요구사항, 개발 조직의 지식 수준, 장기적인 유지보수</strong>까지 고려해 신중히 하세요.</p>
+
+<p>최신 동향에 맞는 선택이 앞으로 더욱 효율적인 개발과 운영을 가능하게 합니다.</p>
+
+
+    </div>
+
+</article>
+<div class="post-nav">
+<a class="previous" href="/jekyll-theme-yat/infra/2025/07/14/zero_downtime_deployment.html" title="배포가 두렵다면? 무중단 배포 전략">
+          <div>배포가 두렵다면? 무중단 배포 전략</div>
+        </a><a class="next" href="/jekyll-theme-yat/design-pattern/2025/07/27/if-else-explosion.html" title="if-else는 이제 그만, 전략 패턴으로 코드 개선하기">
+          <div>if-else는 이제 그만, 전략 패턴으로 코드 개선하기</div>
+        </a>
+</div>
+<div class="post-related">
+      <div>Related Articles</div>
+      <ul>
+        
+        </ul>
+    </div>
+<div class="post-comments"></div></section>
+</div>
+
+
+  </section>
+  <section class="sidebar" style="margin-left: 15px;">
+    <!-- Get sidebar items --></section>
+</div>
+
+
+        <script src="https://utteranc.es/client.js" repo="KIM-KYOUNG-OH/blog-comments-repo" issue-term="pathname" theme="github-light" crossorigin="anonymous" async>
+</script>
+
+      </div>
+    </main><footer class="site-footer h-card">
+  <data class="u-url" href="/jekyll-theme-yat/"></data>
+
+  <div class="wrapper">
+    <div class="site-footer-inner">
+<div>Unpublished Work <span class="copyleft">©</span> 2017-2025 KIM-KYOUNG-OH</div>
+      <div>Powered by <a title="Jekyll is a simple, blog-aware, static site
+      generator." href="https://jekyllrb.com/">Jekyll</a> &amp; <a title="Yat, yet
+      another theme." href="https://github.com/jeffreytse/jekyll-theme-yat">Yat Theme</a>.</div>
+      <div class="footer-col rss-subscribe">Subscribe <a href="/jekyll-theme-yat/feed.xml">via RSS</a>
+</div>
+    </div>
+  </div>
+</footer>
+</body>
+</html>
