@@ -6,7 +6,7 @@ author: 김경오
 categories: Infra
 date: 2025-12-07
 banner:
-  image: https://github.com/user-attachments/assets/ff1faba9-06ca-44c4-973a-a9c2080e61f3
+  image: https://github.com/user-attachments/assets/5e548f0d-f0f0-4e3e-90e2-8c4af15649b6
   opacity: 0.618
   background: "#000"
   height: "30vh"
