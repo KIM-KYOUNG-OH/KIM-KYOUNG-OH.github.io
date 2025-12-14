@@ -2,7 +2,6 @@
 layout: post
 published: true
 title: 배포가 두렵다면? 무중단 배포 전략
-author: 김경오
 categories: Infra
 date: 2025-07-14
 banner:
@@ -11,10 +10,11 @@ banner:
   background: "#000"
   height: "30vh"
   min_height: "38vh"
-  heading_style: "font-size: 4.25em; font-weight: bold; text-decoration: underline"
+  heading_style: "font-weight: bold;"
   subheading_style: "color: gold"
 tags: zero-downtime-deployment infra CI/CD
 sidebar: []
+comments: true
 ---
 
 서비스 배포할 때마다 손이 떨리고 로그창만 바라보며 기도하게 되시나요?  

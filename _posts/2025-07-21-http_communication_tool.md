@@ -2,7 +2,6 @@
 layout: post
 published: true
 title: Spring 개발자가 알아야 할 HTTP 통신 도구
-author: 김경오
 categories: Spring
 date: 2025-07-21
 banner:
@@ -11,10 +10,11 @@ banner:
   background: "#000"
   height: "30vh"
   min_height: "38vh"
-  heading_style: "font-size: 4.25em; font-weight: bold; text-decoration: underline"
+  heading_style: "font-weight: bold;"
   subheading_style: "color: gold"
 tags: http spring java
 sidebar: []
+comments: true
 ---
 
 Spring 기반 애플리케이션에서 외부 API와의 HTTP 통신은 매우 일반적인 작업입니다. 하지만 사용할 수 있는 도구가 다양하다 보니, **어떤 도구를 언제 써야 할지 헷갈리는 경우가 많습니다.**

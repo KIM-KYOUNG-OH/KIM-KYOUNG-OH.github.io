@@ -2,7 +2,6 @@
 layout: post
 published: true
 title: if-else는 이제 그만, 전략 패턴으로 코드 개선하기
-author: 김경오
 categories: Design-Pattern
 date: 2025-07-27
 banner:
@@ -11,10 +10,11 @@ banner:
   background: "#000"
   height: "30vh"
   min_height: "38vh"
-  heading_style: "font-size: 4.25em; font-weight: bold; text-decoration: underline"
+  heading_style: "font-weight: bold;"
   subheading_style: "color: gold"
 tags: design-pattern spring java strategy-pattern 
 sidebar: []
+comments: true
 ---
 
 개발자라면 한 번쯤은 `if-else` 문으로 가득한 클래스를 만들어본 적이 있을 겁니다.  
@@ -157,5 +157,3 @@ public class DeliveryService {
 
 더 이상 if-else 지옥에 갇히지 마세요.
 전략 패턴으로 깔끔하고 유지보수 쉬운 코드를 만들어 보세요!
-
-

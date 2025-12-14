@@ -1,7 +1,6 @@
 ---
 layout: post
 title: 항해 Plus 1주차 회고(WIL)
-author: 김경오
 categories: 회고
 date: 2024-12-22
 banner:
@@ -10,10 +9,11 @@ banner:
   background: "#000"
   height: "30vh"
   min_height: "38vh"
-  heading_style: "font-size: 4.25em; font-weight: bold; text-decoration: underline"
+  heading_style: "font-weight: bold;"
   subheading_style: "color: gold"
 tags: clean-code test concurrency-control
 sidebar: []
+comments: true
 ---
 
 항해 Plus 1주차 핵심 주제는 ‘클린 코드 & 테스트’ 에 대한 내용이었습니다.
