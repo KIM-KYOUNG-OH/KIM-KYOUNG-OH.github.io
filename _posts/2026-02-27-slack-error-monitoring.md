@@ -3,7 +3,7 @@ layout: post
 published: true
 title: Slack Webhook 기반 에러 모니터링 시스템 구축하기
 categories: Infra
-date: 2026-03-02
+date: 2026-02-27
 banner:
   image: https://github.com/user-attachments/assets/c4db0448-34f2-4a85-89dc-140d6204fea0
   opacity: 0.618
