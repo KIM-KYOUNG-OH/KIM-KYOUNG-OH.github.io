@@ -17,26 +17,19 @@ sidebar: []
 comments: true
 ---
 
-프론트엔드와 백엔드 간 API 소통 문서로 Swagger UI가 자주 사용됩니다.
-API를 개발하다 보면 에러 응답 코드를 정의해야 할 때가 오는데, `@ApiResponse` 어노테이션을 일일이 작성하다 보면 비즈니스 코드가 점점 비대해지고, 비즈니스 로직과 Swagger 문서화 로직이 혼재되기 시작합니다.
+프론트엔드와 백엔드 간 소통 매개체로 Swagger UI가 자주 사용됩니다.
+API를 개발하다 보면 에러 응답 코드를 정의해야하는 경우가 많은데, `@ApiResponse` 어노테이션을 사용하여 에러 코드를 일일이 작성하다 보면 비즈니스 코드가 점점 비대해지고, 비즈니스 로직과 Swagger 문서화 로직이 혼재되기 시작합니다.
 
 이번 글에서는 **커스텀 어노테이션과 에러코드 enum**을 활용하여, 비즈니스 코드와 문서화 로직을 분리하면서 Swagger UI에 에러 응답 예시를 **자동으로 생성**하는 패턴을 소개합니다.
 
 ## 도입 배경
 
-에러 응답 문서화를 자동화하기 전에는 다음과 같은 문제가 있었습니다:
+기존 방식에는 두 가지 문제가 있었습니다:
 
-- **반복적인 수동 작성**: 모든 API 메서드에 `@ApiResponse` 어노테이션을 하나씩 작성해야 했습니다. 에러 종류가 추가될 때마다 관련된 모든 컨트롤러를 수정해야 했습니다.
-- **문서와 실제 동작의 불일치**: Swagger 문서에는 400 에러만 기술했는데 실제로는 404도 발생하는 등, 문서와 실제 에러 응답이 달라지는 문제가 빈번했습니다.
-- **HTTP Status 관리의 분산**: 에러별 HTTP Status 코드가 코드 곳곳에 하드코딩되어 있어 일관성을 유지하기 어려웠습니다.
-
-이 문제들을 해결하기 위해 다음 목표를 세웠습니다:
-
-| 항목 | Before | After |
-|------|--------|-------|
-| Swagger 에러 문서 | `@ApiResponse` 수동 작성 | 어노테이션 하나로 자동 생성 |
-| HTTP Status 관리 | 코드마다 분산 | enum으로 중앙 집중화 |
-| 에러 메시지 | 하드코딩 | MessageSource로 국제화 지원 |
+- **비즈니스 로직과 Swagger 문서화 로직의 혼재**: 
+  - 에러코드가 추가될 때마다 해당 API 메서드에 `@ApiResponse` 어노테이션을 하나씩 작성해야 했습니다. API가 늘어날수록 Controller 코드는 비대해지고, 비즈니스 로직과 문서화 로직이 뒤섞여 가독성이 떨어졌습니다.
+- **에러 응답의 통합 관리 부재**: 
+  - 에러별 HTTP Status 코드와 메시지를 확인하려면 비즈니스 코드를 직접 열어봐야 했습니다. 에러 정보가 여러 파일에 파편화되어 전체 에러 체계를 한눈에 파악하기 어려웠습니다.
 
 ---
 
@@ -158,7 +151,9 @@ public @interface ApiErrorCodeExamples {
 }
 ```
 
-Controller 메서드에 적용하여 해당 API에서 발생할 수 있는 에러코드를 선언합니다. 런타임에 `OperationCustomizer`가 이 어노테이션을 읽어 Swagger 문서를 자동 생성합니다.
+Controller 메서드에 적용하여 해당 API에서 발생할 수 있는 에러코드를 선언합니다.   
+런타임에 `OperationCustomizer`가 이 어노테이션을 읽어 Swagger 문서를 자동 생성합니다.  
+관점 지향 프로그래밍(AOP)의 관점에서 보면, Swagger 문서화라는 횡단 관심사(cross-cutting concern)를 어노테이션으로 분리하여 비즈니스 로직의 순수성을 유지하는 구조입니다.
 
 ### Step 4: ErrorResponse (에러 응답 DTO)
 
@@ -175,7 +170,26 @@ public class ErrorResponse {
 
 ### Step 5: GlobalExceptionHandler (예외 핸들러)
 
+- `@Order(HIGHEST_PRECEDENCE)`로 다른 예외 핸들러보다 우선 처리되어, 기존 예외 처리 로직과 독립적으로 동작합니다.
+- MessageSource에서 에러코드로 메시지를 조회하므로 국제화(i18n)를 지원합니다.
+
+```
+src/main/resources/
+├── messages_ko.properties   # 한국어
+├── messages_en.properties   # 영어
+└── messages_ja.properties   # 일본어
+```
+
 ```java
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.context.support.MessageSourceAccessor;
+import org.springframework.core.Ordered;
+import org.springframework.core.annotation.Order;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.RestControllerAdvice;
+
 @Slf4j
 @RestControllerAdvice
 @Order(Ordered.HIGHEST_PRECEDENCE)
@@ -198,10 +212,6 @@ public class GlobalExceptionHandler {
     }
 }
 ```
-
-핵심 포인트:
-- `@Order(HIGHEST_PRECEDENCE)`로 다른 예외 핸들러보다 우선 처리되어, 기존 예외 처리 로직과 독립적으로 동작합니다.
-- MessageSource에서 에러코드로 메시지를 조회하므로 국제화(i18n)를 지원합니다.
 
 ### Step 6: SwaggerConfig (OperationCustomizer)
 
@@ -260,7 +270,7 @@ public class SwaggerConfig {
 ```
 
 동작 원리:
-1. `OperationCustomizer`가 모든 API Operation을 순회하며 `@ApiErrorCodeExamples` 어노테이션을 확인
+1. 첫 번째 Swagger UI(또는 `/v3/api-docs`) 접근 시, `OperationCustomizer`가 모든 API Operation을 **1회 순회**하며 `@ApiErrorCodeExamples` 어노테이션을 확인 (이후 캐싱되므로 런타임 성능에 영향 없음)
 2. 어노테이션에 선언된 에러코드들을 **HTTP Status별로 그룹핑**
 3. 각 에러코드별로 Example 객체를 생성하여 Swagger 응답에 추가
 4. Swagger UI에서는 동일 HTTP Status 내 에러코드를 **드롭다운으로 선택**하여 확인 가능
@@ -293,9 +303,36 @@ E500.01=외부 API 호출 중 에러가 발생했습니다.
 
 ---
 
-## 사용법
+### Swagger API 명세서에 에러 코드 추가하기
 
-### Controller에 어노테이션 적용
+**AS-IS: `@ApiResponse`를 일일이 정의하는 방식**
+
+```java
+@RestController
+@RequestMapping("/api/users")
+@RequiredArgsConstructor
+public class UserController {
+
+    private final UserService userService;
+
+    @ApiResponses({
+        @ApiResponse(responseCode = "400", description = "잘못된 요청입니다.",
+            content = @Content(schema = @Schema(implementation = ErrorResponse.class))),
+        @ApiResponse(responseCode = "401", description = "인증이 필요합니다.",
+            content = @Content(schema = @Schema(implementation = ErrorResponse.class))),
+        @ApiResponse(responseCode = "404", description = "요청한 리소스를 찾을 수 없습니다.",
+            content = @Content(schema = @Schema(implementation = ErrorResponse.class)))
+    })
+    @GetMapping("/{id}")
+    public ResponseEntity<UserDto> getUser(@PathVariable Long id) {
+        return ResponseEntity.ok(userService.getUser(id));
+    }
+}
+```
+
+에러코드가 추가될 때마다 `@ApiResponse` 블록이 늘어나고, 메시지가 하드코딩되어 실제 응답과 불일치할 위험이 있습니다.
+
+**TO-BE: `@ApiErrorCodeExamples`를 사용하는 방식**
 
 ```java
 @RestController
@@ -306,9 +343,7 @@ public class UserController {
     private final UserService userService;
 
     @ApiErrorCodeExamples({
-        ApiErrorCode.BAD_REQUEST,
-        ApiErrorCode.NOT_FOUND,
-        ApiErrorCode.UNAUTHORIZED
+        ApiErrorCode.BAD_REQUEST, ApiErrorCode.NOT_FOUND, ApiErrorCode.UNAUTHORIZED
     })
     @GetMapping("/{id}")
     public ResponseEntity<UserDto> getUser(@PathVariable Long id) {
@@ -317,13 +352,13 @@ public class UserController {
 }
 ```
 
-이것이 전부입니다. `@ApiErrorCodeExamples`에 에러코드를 나열하면 Swagger UI에 해당 에러 응답이 자동으로 표시됩니다.
+`@ApiErrorCodeExamples`에 에러코드를 나열하면 Swagger UI에 해당 에러 응답이 자동으로 표시됩니다.
 
 어노테이션 적용 후 Swagger UI에서는 HTTP Status별로 에러 예시가 드롭다운으로 표시됩니다:
 
 <img src="https://github.com/user-attachments/assets/3abcf2a8-e16a-4a52-9bff-3e8b106cb605" alt="Swagger UI 에러 응답 문서화 예시" style="max-width: 100%;">
 
-### Service에서 예외 발생
+### Service에서 예외 처리 방법
 
 ```java
 @Service
@@ -348,50 +383,7 @@ try {
 }
 ```
 
----
-
-## 에러코드 추가 방법
-
-새로운 에러 코드를 추가하는 절차는 3단계로 간단합니다.
-
-### 1. ApiErrorCode enum에 추가
-
-```java
-public enum ApiErrorCode {
-    // 기존 코드...
-    NEW_ERROR("E400.99", HttpStatus.BAD_REQUEST);
-}
-```
-
-### 2. 메시지 정의
-
-```properties
-E400.99=새로운 에러 메시지입니다.
-```
-
-### 3. Controller에 적용
-
-```java
-@ApiErrorCodeExamples({ApiErrorCode.NEW_ERROR})
-@GetMapping("/example")
-public ResponseEntity<Void> example() { ... }
-```
-
-enum에 추가하고, 메시지를 정의하고, 어노테이션에 선언하면 끝입니다. Swagger 문서와 실제 에러 응답 모두 자동으로 반영됩니다.
-
----
-
-## 기존 예외 핸들러와의 공존
-
-이미 예외 처리 로직이 있는 프로젝트에서도 안전하게 도입할 수 있습니다:
-
-- `@Order(HIGHEST_PRECEDENCE)` 설정으로 `ApiException`만 우선 처리
-- 기존 예외 처리 로직에 영향 없이 두 시스템이 독립적으로 동작
-- 기존 비즈니스 예외는 그대로 유지하면서 새로운 API에만 점진적으로 적용 가능
-
----
-
-## 주의사항
+## ⚠️ 주의사항
 
 1. **에러코드 중복 방지**: 새로운 에러코드 추가 시 기존 코드와 중복되지 않는지 확인
 2. **메시지 동기화**: `ApiErrorCode` enum 추가 시 반드시 `message.properties`에 메시지 정의
@@ -403,7 +395,7 @@ enum에 추가하고, 메시지를 정의하고, 어노테이션에 선언하면
 
 이 패턴을 적용하면 다음과 같은 효과를 얻을 수 있습니다:
 
-- **반복 작업 제거**: `@ApiResponse`를 일일이 작성하지 않아도 됩니다
+- **반복 코드 제거**: Swagger UI에 에러코드를 명시하기 위해 `@ApiResponse`를 일일이 작성하지 않아도 됩니다
 - **에러 처리 중앙화**: 에러코드, HTTP Status, 메시지가 모두 한곳에서 관리됩니다
 - **문서 정합성**: Swagger 문서와 실제 에러 응답이 항상 동일하게 유지됩니다
 - **타입 안전성**: enum 기반이므로 존재하지 않는 에러코드를 참조할 수 없습니다
