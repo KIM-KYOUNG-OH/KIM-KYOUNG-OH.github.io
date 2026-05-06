@@ -1,6 +1,6 @@
 ---
 layout: post
-published: false
+published: true
 title: "CI/CD 테스트 자동화 with Testcontainers"
 categories: Test
 date: 2026-05-06
@@ -22,12 +22,12 @@ comments: true
 
 이번 글에서는 Unit/Integration/E2E 역할별로 테스트 레이어를 효율적으로 분리하고, **Testcontainers**를 활용해 Docker만 있으면 누구나 동일한 DB 환경에서 테스트를 실행할 수 있도록 환경을 통일한 과정을 정리합니다.
 
-## Testcontainers란?
+## Testcontainers 란?
 
 Testcontainers는 테스트 시 Docker 컨테이너 기반으로 테스트 환경 의존성을 제어할 수 있는 오픈소스 라이브러리입니다.  
 서비스 의존성(DB, 메시지 큐, Redis 등)을 프로덕션과 동일한 실제 서비스로 Docker 컨테이너에 띄워 사용할 수 있습니다.
 
-## 왜 Testcontainers인가?
+## 왜 Testcontainers 인가?
 
 ### 1. 작업자들 간 테스트 환경 통일
 
